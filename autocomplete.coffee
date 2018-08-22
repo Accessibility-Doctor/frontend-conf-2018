@@ -1,14 +1,3 @@
-# Tested in JAWS+IE/FF, NVDA+FF
-#
-# Known issues:
-# - JAWS leaves the input when using up/down without entering something (I guess this is due to screen layout and can be considered intended)
-# - Alert not perceivable upon opening options using up/down
-#     - Possible solution 1: always show options count when filter focused?
-#     - Possible solution 2: wait a moment before adding the alert?
-# - VoiceOver/iOS announces radio buttons as disabled?!
-# - iOS doesn't select all text when option was chosen
-#
-# In general: alerts seem to be most robust in all relevant browsers, but aren't polite. Maybe we'll find a better mechanism to serve browsers individually?
 class AdgAutocomplete
   constructor: (el, options = {}) ->
     @$el = $(el)
@@ -31,7 +20,6 @@ class AdgAutocomplete
 
       if $label.length == 0
         $label = $input.closest('label')
-        @throwMessageAndPrintObjectsToConsole "No corresponding input found for input!", input: $input if $label.length == 0
 
       $label
 
@@ -39,16 +27,9 @@ class AdgAutocomplete
     $el.removeAttr('hidden')
     $el.show()
 
-    # TODO Would be cool to renounce CSS and solely use the hidden attribute. But jQuery's :visible doesn't seem to work with it!?
-    # @throwMessageAndPrintObjectsToConsole("Element is still hidden, although hidden attribute was removed! Make sure there's no CSS like display:none or visibility:hidden left on it!", element: $el) if $el.is(':hidden')
-
   hide: ($el) ->
     $el.attr('hidden', '')
     $el.hide()
-
-  throwMessageAndPrintObjectsToConsole: (message, elements = {}) ->
-    console.log elements
-    throw message
 
   text: (text, options = {}) ->
     for key, value of options
@@ -137,7 +118,7 @@ class AdgAutocomplete
         else
           @showOptions()
 
-        e.preventDefault() # TODO: Test!
+        e.preventDefault()
 
   showOptions: ->
     @show(@$optionsContainer)
@@ -151,7 +132,7 @@ class AdgAutocomplete
     $visibleOptions = @$options.filter(':visible')
 
     maxIndex = $visibleOptions.length - 1
-    currentIndex = $visibleOptions.index($visibleOptions.parent().find(':checked')) # TODO: is parent() good here?!
+    currentIndex = $visibleOptions.index($visibleOptions.parent().find(':checked'))
 
     upcomingIndex = if direction == 'up'
                       if currentIndex <= 0
@@ -217,7 +198,7 @@ class AdgAutocomplete
     @announceOptionsNumber(filter, visibleNumber)
 
   announceOptionsNumber: (filter = @$filter.val(), number = @$options.length) ->
-    @$alertsContainer.find('p').remove() # Remove previous alerts (I'm not sure whether this is the best solution, maybe hiding them would be more robust?)
+    @$alertsContainer.find('p').remove() # Remove previous alerts
 
     message = if filter == ''
                 @text('[number] options in total', number: number)
