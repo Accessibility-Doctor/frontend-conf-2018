@@ -12,29 +12,8 @@
 class AdgAutocomplete
   uniqueIdCount = 1
 
-  config =
-    debugMessage:   false
-    hiddenCssClass: 'adg-visually-hidden'
-
-    optionsContainer:      'fieldset'
-    optionsContainerLabel: 'legend'
-    alertsContainerId:     'alerts'
-    numberInTotalText:     '[number] options in total'
-    numberFilteredText:    '[number] of [total] options for [filter]'
-
   constructor: (el, options = {}) ->
     @$el = $(el)
-
-    @config = config
-    for key, val of options
-      @config[key] = val
-
-    jsonOptions = @$el.attr(@adgDataAttributeName())
-    if jsonOptions
-      for key, val of jsonOptions
-        @config[key] = val
-
-    @debugMessage 'start'
 
     @initFilter()
     @initOptions()
@@ -44,10 +23,6 @@ class AdgAutocomplete
     @announceOptionsNumber('')
 
     @attachEvents()
-
-  # Prints the given message to the console if config['debug'] is true.
-  debugMessage: (message) ->
-    console.log "Adg debug: #{message}" if @config.debugMessage
 
   # Executes the given selector on @$el and returns the element. Makes sure exactly one element exists.
   findOne: (selector) ->
@@ -103,8 +78,6 @@ class AdgAutocomplete
     throw message
 
   text: (text, options = {}) ->
-    text = @config["#{text}Text"]
-
     for key, value of options
       text = text.replace "[#{key}]", value
 
@@ -117,18 +90,18 @@ class AdgAutocomplete
     @$filter.attr('aria-expanded', 'false')
 
   initOptions: ->
-    @$optionsContainer = @findOne(@config.optionsContainer)
+    @$optionsContainer = @findOne('fieldset')
     @addAdgDataAttribute(@$optionsContainer, 'options')
 
-    @$optionsContainerLabel = @findOne(@config.optionsContainerLabel)
-    @$optionsContainerLabel.addClass(@config.hiddenCssClass)
+    @$optionsContainerLabel = @findOne('legend')
+    @$optionsContainerLabel.addClass('adg-visually-hidden')
 
     @$options = @$optionsContainer.find('input[type="radio"]')
     @addAdgDataAttribute(@labelOfInput(@$options), 'option')
-    @$options.addClass(@config.hiddenCssClass)
+    @$options.addClass('adg-visually-hidden')
 
   initAlerts: ->
-    @$alertsContainer = $("<div id='#{@uniqueId(@config.alertsContainerId)}'></div>")
+    @$alertsContainer = $("<div id='#{@uniqueId('alerts')}'></div>")
     @$optionsContainerLabel.after(@$alertsContainer)
     @$filter.attr('aria-describedby', [@$filter.attr('aria-describedby'), @$alertsContainer.attr('id')].join(' ').trim())
     @addAdgDataAttribute(@$alertsContainer, 'alerts')
@@ -147,7 +120,6 @@ class AdgAutocomplete
 
   attachClickEventToFilter: ->
     @$filter.click =>
-      @debugMessage 'click filter'
       if @$optionsContainer.is(':visible')
         @hideOptions()
       else
@@ -169,7 +141,6 @@ class AdgAutocomplete
   attachEnterKeyToFilter: ->
     @$filter.keydown (e) =>
       if e.which == 13
-        @debugMessage 'enter'
         if @$optionsContainer.is(':visible')
           @applyCheckedOptionToFilterAndResetOptions()
           e.preventDefault()
@@ -179,7 +150,6 @@ class AdgAutocomplete
   attachTabKeyToFilter: ->
     @$filter.keydown (e) =>
       if e.which == 9
-        @debugMessage 'tab'
         if @$optionsContainer.is(':visible')
           @applyCheckedOptionToFilterAndResetOptions()
 
@@ -197,12 +167,10 @@ class AdgAutocomplete
         e.preventDefault() # TODO: Test!
 
   showOptions: ->
-    @debugMessage '(show options)'
     @show(@$optionsContainer)
     @$filter.attr('aria-expanded', 'true')
 
   hideOptions: ->
-    @debugMessage '(hide options)'
     @hide(@$optionsContainer)
     @$filter.attr('aria-expanded', 'false')
 
@@ -228,7 +196,6 @@ class AdgAutocomplete
 
   attachChangeEventToOptions: ->
     @$options.change (e) =>
-      @debugMessage 'option change'
       @applyCheckedOptionToFilter()
       @$filter.focus().select()
 
@@ -238,8 +205,6 @@ class AdgAutocomplete
     @filterOptions()
 
   applyCheckedOptionToFilter: ->
-    @debugMessage '(apply option to filter)'
-
     $previouslyCheckedOptionLabel = $("[#{@adgDataAttributeName('option-selected')}]")
     if $previouslyCheckedOptionLabel.length == 1
       @removeAdgDataAttribute($previouslyCheckedOptionLabel, 'option-selected')
@@ -254,12 +219,10 @@ class AdgAutocomplete
 
   attachClickEventToOptions: ->
     @$options.click (e) =>
-      @debugMessage 'click option'
       @hideOptions()
 
   attachChangeEventToFilter: ->
     @$filter.on 'input propertychange paste', (e) =>
-      @debugMessage '(filter changed)'
       @filterOptions(e.target.value)
       @showOptions()
 
@@ -284,9 +247,9 @@ class AdgAutocomplete
     @$alertsContainer.find('p').remove() # Remove previous alerts (I'm not sure whether this is the best solution, maybe hiding them would be more robust?)
 
     message = if filter == ''
-                @text('numberInTotal', number: number)
+                @text('[number] options in total', number: number)
               else
-                @text('numberFiltered', number: number, total: @$options.length, filter: "<kbd>#{filter}</kbd>")
+                @text('[number] of [total] options for [filter]', number: number, total: @$options.length, filter: "<kbd>#{filter}</kbd>")
 
     @$alertsContainer.append("<p role='alert'>#{message}</p>")
 
