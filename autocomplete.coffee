@@ -24,14 +24,6 @@ class AdgAutocomplete
 
     @attachEvents()
 
-  # Executes the given selector on @$el and returns the element. Makes sure exactly one element exists.
-  findOne: (selector) ->
-    result = @$el.find(selector)
-    switch result.length
-      when 0 then @throwMessageAndPrintObjectsToConsole "No object found for #{selector}!", result: result
-      when 1 then $(result.first())
-      else @throwMessageAndPrintObjectsToConsole "More than one object found for #{selector}!", result: result
-
   name: ->
     "adg-autosuggest"
 
@@ -54,7 +46,7 @@ class AdgAutocomplete
       $input = $(input)
 
       id = $input.attr('id')
-      $label = @findOne("label[for='#{id}']")[0]
+      $label = @$el.find("label[for='#{id}']")[0]
 
       if $label.length == 0
         $label = $input.closest('label')
@@ -84,16 +76,16 @@ class AdgAutocomplete
     text
 
   initFilter: ->
-    @$filter = @findOne('input[type="text"]')
+    @$filter = @$el.find('input[type="text"]')
     @addAdgDataAttribute(@$filter, 'filter')
     @$filter.attr('autocomplete', 'off')
     @$filter.attr('aria-expanded', 'false')
 
   initOptions: ->
-    @$optionsContainer = @findOne('fieldset')
+    @$optionsContainer = @$el.find('fieldset')
     @addAdgDataAttribute(@$optionsContainer, 'options')
 
-    @$optionsContainerLabel = @findOne('legend')
+    @$optionsContainerLabel = @$el.find('legend')
     @$optionsContainerLabel.addClass('adg-visually-hidden')
 
     @$options = @$optionsContainer.find('input[type="radio"]')
