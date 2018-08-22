@@ -31,12 +31,6 @@ class Autocomplete
     $el.attr('hidden', '')
     $el.hide()
 
-  text: (text, options = {}) ->
-    for key, value of options
-      text = text.replace "[#{key}]", value
-
-    text
-
   initFilter: ->
     @$filter = @$el.find('input[type="text"]')
     @$filter.attr("data-autosuggest-filter", '')
@@ -201,9 +195,9 @@ class Autocomplete
     @$alertsContainer.find('p').remove() # Remove previous alerts
 
     message = if filter == ''
-                @text('[number] options in total', number: number)
+                "#{number} options in total"
               else
-                @text('[number] of [total] options for [filter]', number: number, total: @$options.length, filter: "<kbd>#{filter}</kbd>")
+                "#{number} of #{@$options.length} options for <kbd>#{filter}</kbd>"
 
     @$alertsContainer.append("<p role='alert'>#{message}</p>")
 
