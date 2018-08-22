@@ -28,10 +28,10 @@ class Autocomplete
     @$optionsContainer.attr('data-autocomplete-options', '')
 
     @$optionsContainerLabel = @$el.find('legend')
-    @$optionsContainerLabel.addClass('adg-visually-hidden')
+    @$optionsContainerLabel.addClass('visually-hidden')
 
     @$options = @$optionsContainer.find('input[type="radio"]')
-    @$options.addClass('adg-visually-hidden')
+    @$options.addClass('visually-hidden')
     @$optionsContainer.find('label').attr('data-autocomplete-option', '')
 
   initAlerts: ->
