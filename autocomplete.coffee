@@ -13,11 +13,9 @@ class Autocomplete
 
   show: ($el) ->
     $el.removeAttr('hidden')
-    $el.show()
 
   hide: ($el) ->
     $el.attr('hidden', '')
-    $el.hide()
 
   initFilter: ->
     @$filter = @$el.find('input[type="text"]')
@@ -56,7 +54,7 @@ class Autocomplete
 
   attachClickEventToFilter: ->
     @$filter.click =>
-      if @$optionsContainer.is(':visible')
+      if !@$optionsContainer.attr('hidden')
         @hideOptions()
       else
         @showOptions()
@@ -64,7 +62,7 @@ class Autocomplete
   attachEscapeKeyToFilter: ->
     @$filter.keydown (e) =>
       if e.which == 27
-        if @$optionsContainer.is(':visible')
+        if !@$optionsContainer.attr('hidden')
           @applyCheckedOptionToFilterAndResetOptions()
           e.preventDefault()
         else if @$options.is(':checked')
@@ -77,7 +75,7 @@ class Autocomplete
   attachEnterKeyToFilter: ->
     @$filter.keydown (e) =>
       if e.which == 13
-        if @$optionsContainer.is(':visible')
+        if !@$optionsContainer.attr('hidden')
           @applyCheckedOptionToFilterAndResetOptions()
           e.preventDefault()
         else # Needed for automatic testing only
@@ -86,13 +84,13 @@ class Autocomplete
   attachTabKeyToFilter: ->
     @$filter.keydown (e) =>
       if e.which == 9
-        if @$optionsContainer.is(':visible')
+        if !@$optionsContainer.attr('hidden')
           @applyCheckedOptionToFilterAndResetOptions()
 
   attachUpDownKeysToFilter: ->
     @$filter.keydown (e) =>
       if e.which == 38 || e.which == 40
-        if @$optionsContainer.is(':visible')
+        if !@$optionsContainer.attr('hidden')
           if e.which == 38
             @moveSelection('up')
           else
