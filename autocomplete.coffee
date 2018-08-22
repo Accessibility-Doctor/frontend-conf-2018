@@ -7,7 +7,7 @@ class Autocomplete
     @initAlerts()
 
     @applyCheckedOptionToFilter()
-    @announceOptionsNumber('')
+    @announceOptionsCount('')
 
     @attachEvents()
 
@@ -162,7 +162,7 @@ class Autocomplete
 
   filterOptions: (filter = '') ->
     fuzzyFilter = @fuzzifyFilter(filter)
-    visibleNumber = 0
+    visibleCount = 0
 
     @$options.each (i, el) =>
       $option = $(el)
@@ -170,20 +170,20 @@ class Autocomplete
 
       regex = new RegExp(fuzzyFilter, 'i')
       if regex.test($optionContainer.text())
-        visibleNumber++
+        visibleCount++
         @show($optionContainer)
       else
         @hide($optionContainer)
 
-    @announceOptionsNumber(filter, visibleNumber)
+    @announceOptionsCount(filter, visibleCount)
 
-  announceOptionsNumber: (filter = @$filter.val(), number = @$options.length) ->
+  announceOptionsCount: (filter = @$filter.val(), count = @$options.length) ->
     @$alertsContainer.find('p').remove() # Remove previous alerts
 
     message = if filter == ''
-                "#{number} options in total"
+                "#{count} options in total"
               else
-                "#{number} of #{@$options.length} options for <kbd>#{filter}</kbd>"
+                "#{count} of #{@$options.length} options for <kbd>#{filter}</kbd>"
 
     @$alertsContainer.append("<p role='alert'>#{message}</p>")
 
