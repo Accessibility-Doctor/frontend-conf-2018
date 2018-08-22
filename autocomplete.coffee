@@ -1,5 +1,5 @@
 class Autocomplete
-  constructor: (el, options = {}) ->
+  constructor: (el) ->
     @$el = $(el)
 
     @initFilter()
