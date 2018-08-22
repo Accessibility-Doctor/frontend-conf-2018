@@ -19,26 +19,26 @@ class Autocomplete
 
   initFilter: ->
     @$filter = @$el.find('input[type="text"]')
-    @$filter.attr("data-autocomplete-filter", '')
+    @$filter.attr('data-autocomplete-filter', '')
     @$filter.attr('autocomplete', 'off')
     @$filter.attr('aria-expanded', 'false')
 
   initOptions: ->
     @$optionsContainer = @$el.find('fieldset')
-    @$optionsContainer.attr("data-autocomplete-options", '')
+    @$optionsContainer.attr('data-autocomplete-options', '')
 
     @$optionsContainerLabel = @$el.find('legend')
     @$optionsContainerLabel.addClass('adg-visually-hidden')
 
     @$options = @$optionsContainer.find('input[type="radio"]')
-    @$options.attr("data-autocomplete-option", '')
+    @$options.attr('data-autocomplete-option', '')
     @$options.addClass('adg-visually-hidden')
 
   initAlerts: ->
     @$alertsContainer = $("<div id='alerts'></div>")
     @$optionsContainerLabel.after(@$alertsContainer)
     @$filter.attr('aria-describedby', [@$filter.attr('aria-describedby'), 'alerts'].join(' ').trim())
-    @$alertsContainer.attr("data-autocomplete-alerts", '')
+    @$alertsContainer.attr('data-autocomplete-alerts', '')
 
   attachEvents: ->
     @attachClickEventToFilter()
@@ -147,7 +147,7 @@ class Autocomplete
     if $checkedOption.length == 1
       $checkedOptionLabel = $(@$el.find("label[for='#{$checkedOption.attr('id')}']")[0])
       @$filter.val($.trim($checkedOptionLabel.text()))
-      $checkedOptionLabel.attr("data-autocomplete-option-selected", '')
+      $checkedOptionLabel.attr('data-autocomplete-option-selected', '')
     else
       @$filter.val('')
 
