@@ -10,8 +10,6 @@
 #
 # In general: alerts seem to be most robust in all relevant browsers, but aren't polite. Maybe we'll find a better mechanism to serve browsers individually?
 class AdgAutocomplete
-  uniqueIdCount = 1
-
   constructor: (el, options = {}) ->
     @$el = $(el)
 
@@ -24,9 +22,6 @@ class AdgAutocomplete
 
     @attachEvents()
 
-  name: ->
-    "adg-autosuggest"
-
   addAdgDataAttribute: ($target, name, value = '') ->
     $target.attr(@adgDataAttributeName(name), value)
 
@@ -37,9 +32,6 @@ class AdgAutocomplete
     result = "data-#{@name()}"
     result += "-#{name}" if name
     result
-
-  uniqueId: (name) ->
-    [@name(), name, uniqueIdCount++].join '-'
 
   labelOfInput: ($inputs) ->
     $inputs.map (i, input) =>
@@ -93,7 +85,7 @@ class AdgAutocomplete
     @$options.addClass('adg-visually-hidden')
 
   initAlerts: ->
-    @$alertsContainer = $("<div id='#{@uniqueId('alerts')}'></div>")
+    @$alertsContainer = $("<div id='alerts'></div>")
     @$optionsContainerLabel.after(@$alertsContainer)
     @$filter.attr('aria-describedby', [@$filter.attr('aria-describedby'), @$alertsContainer.attr('id')].join(' ').trim())
     @addAdgDataAttribute(@$alertsContainer, 'alerts')
