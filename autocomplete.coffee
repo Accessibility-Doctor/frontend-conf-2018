@@ -31,8 +31,8 @@ class Autocomplete
     @$optionsContainerLabel.addClass('adg-visually-hidden')
 
     @$options = @$optionsContainer.find('input[type="radio"]')
-    @$options.attr('data-autocomplete-option', '')
     @$options.addClass('adg-visually-hidden')
+    @$optionsContainer.find('label').attr('data-autocomplete-option', '')
 
   initAlerts: ->
     @$alertsContainer = $("<div id='alerts'></div>")
