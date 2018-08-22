@@ -1,4 +1,4 @@
-class AdgAutocomplete
+class Autocomplete
   constructor: (el, options = {}) ->
     @$el = $(el)
 
@@ -219,4 +219,4 @@ class AdgAutocomplete
 
 $(document).ready ->
   $('[data-autosuggest]').each ->
-    new AdgAutocomplete @
+    new Autocomplete @
