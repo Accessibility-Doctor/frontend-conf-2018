@@ -22,17 +22,6 @@ class AdgAutocomplete
 
     @attachEvents()
 
-  addAdgDataAttribute: ($target, name, value = '') ->
-    $target.attr(@adgDataAttributeName(name), value)
-
-  removeAdgDataAttribute: ($target, name) ->
-    $target.removeAttr(@adgDataAttributeName(name))
-
-  adgDataAttributeName: (name = null) ->
-    result = "data-#{@name()}"
-    result += "-#{name}" if name
-    result
-
   labelOfInput: ($inputs) ->
     $inputs.map (i, input) =>
       $input = $(input)
@@ -69,26 +58,26 @@ class AdgAutocomplete
 
   initFilter: ->
     @$filter = @$el.find('input[type="text"]')
-    @addAdgDataAttribute(@$filter, 'filter')
+    @$filter.attr("data-autosuggest-filter", '')
     @$filter.attr('autocomplete', 'off')
     @$filter.attr('aria-expanded', 'false')
 
   initOptions: ->
     @$optionsContainer = @$el.find('fieldset')
-    @addAdgDataAttribute(@$optionsContainer, 'options')
+    @$optionsContainer.attr("data-autosuggest-options", '')
 
     @$optionsContainerLabel = @$el.find('legend')
     @$optionsContainerLabel.addClass('adg-visually-hidden')
 
     @$options = @$optionsContainer.find('input[type="radio"]')
-    @addAdgDataAttribute(@labelOfInput(@$options), 'option')
+    @labelOfInput(@$options).attr("data-autosuggest-option", '')
     @$options.addClass('adg-visually-hidden')
 
   initAlerts: ->
     @$alertsContainer = $("<div id='alerts'></div>")
     @$optionsContainerLabel.after(@$alertsContainer)
     @$filter.attr('aria-describedby', [@$filter.attr('aria-describedby'), @$alertsContainer.attr('id')].join(' ').trim())
-    @addAdgDataAttribute(@$alertsContainer, 'alerts')
+    @$alertsContainer.attr("data-autosuggest-alerts", '')
 
   attachEvents: ->
     @attachClickEventToFilter()
@@ -189,15 +178,15 @@ class AdgAutocomplete
     @filterOptions()
 
   applyCheckedOptionToFilter: ->
-    $previouslyCheckedOptionLabel = $("[#{@adgDataAttributeName('option-selected')}]")
+    $previouslyCheckedOptionLabel = $("[data-autosuggest-option-selected]")
     if $previouslyCheckedOptionLabel.length == 1
-      @removeAdgDataAttribute($previouslyCheckedOptionLabel, 'option-selected')
+      $previouslyCheckedOptionLabel.removeAttr('data-autosuggest-option-selected')
 
     $checkedOption = @$options.filter(':checked')
     if $checkedOption.length == 1
       $checkedOptionLabel = @labelOfInput($checkedOption)
       @$filter.val($.trim($checkedOptionLabel.text()))
-      @addAdgDataAttribute($checkedOptionLabel, 'option-selected')
+      $checkedOptionLabel.attr("data-autosuggest-option-selected", '')
     else
       @$filter.val('')
 
@@ -248,5 +237,5 @@ class AdgAutocomplete
     fuzzifiedFilter
 
 $(document).ready ->
-  $('[data-adg-autosuggest]').each ->
+  $('[data-autosuggest]').each ->
     new AdgAutocomplete @
