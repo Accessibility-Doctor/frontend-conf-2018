@@ -39,7 +39,7 @@ class Autocomplete
   initAlerts: ->
     @$alertsContainer = $("<div id='alerts'></div>")
     @$optionsContainerLabel.after(@$alertsContainer)
-    @$filter.attr('aria-describedby', [@$filter.attr('aria-describedby'), @$alertsContainer.attr('id')].join(' ').trim())
+    @$filter.attr('aria-describedby', [@$filter.attr('aria-describedby'), 'alerts'].join(' ').trim())
     @$alertsContainer.attr("data-autocomplete-alerts", '')
 
   attachEvents: ->
