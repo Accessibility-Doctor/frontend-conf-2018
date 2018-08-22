@@ -7,7 +7,7 @@ form
       input#favorite_hobby_filter type="text" aria-describedby="favorite_hobby_filter_help"
 
       fieldset hidden=true
-        legend Favorite hobby completeions
+        legend Favorite hobby suggestions
 
         - [:hiking, :dancing, :gardening, :meditation, :gaming].each do |hobby|
           - id = "favorite_hobby_#{hobby}"
@@ -16,6 +16,6 @@ form
             input id=id type="radio" name="hobby"
             label for=id = hobby.capitalize
 
-      #favorite_hobby_filter_help.description Provides auto-completeions when entering text
+      #favorite_hobby_filter_help.description Provides auto-suggestions when entering text
 
 p: button Focusable element after
