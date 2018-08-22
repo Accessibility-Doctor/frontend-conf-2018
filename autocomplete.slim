@@ -1,13 +1,13 @@
 p: button Focusable element before
 
 form
-  div data-autosuggest=true
+  div data-autocomplete=true
     .control
       label for="favorite_hobby_filter" Favorite hobby
       input#favorite_hobby_filter type="text" aria-describedby="favorite_hobby_filter_help"
 
       fieldset hidden=true
-        legend Favorite hobby suggestions
+        legend Favorite hobby completeions
 
         - [:hiking, :dancing, :gardening, :meditation, :gaming].each do |hobby|
           - id = "favorite_hobby_#{hobby}"
@@ -16,6 +16,6 @@ form
             input id=id type="radio" name="hobby"
             label for=id = hobby.capitalize
 
-      #favorite_hobby_filter_help.description Provides auto-suggestions when entering text
+      #favorite_hobby_filter_help.description Provides auto-completeions when entering text
 
 p: button Focusable element after
