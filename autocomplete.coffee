@@ -11,18 +11,6 @@ class Autocomplete
 
     @attachEvents()
 
-  labelOfInput: ($inputs) ->
-    $inputs.map (i, input) =>
-      $input = $(input)
-
-      id = $input.attr('id')
-      $label = @$el.find("label[for='#{id}']")[0]
-
-      if $label.length == 0
-        $label = $input.closest('label')
-
-      $label
-
   show: ($el) ->
     $el.removeAttr('hidden')
     $el.show()
@@ -45,7 +33,7 @@ class Autocomplete
     @$optionsContainerLabel.addClass('adg-visually-hidden')
 
     @$options = @$optionsContainer.find('input[type="radio"]')
-    @labelOfInput(@$options).attr("data-autosuggest-option", '')
+    @$options.attr("data-autosuggest-option", '')
     @$options.addClass('adg-visually-hidden')
 
   initAlerts: ->
@@ -159,7 +147,7 @@ class Autocomplete
 
     $checkedOption = @$options.filter(':checked')
     if $checkedOption.length == 1
-      $checkedOptionLabel = @labelOfInput($checkedOption)
+      $checkedOptionLabel = $(@$el.find("label[for='#{$checkedOption.attr('id')}']")[0])
       @$filter.val($.trim($checkedOptionLabel.text()))
       $checkedOptionLabel.attr("data-autosuggest-option-selected", '')
     else
