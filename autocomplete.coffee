@@ -25,6 +25,8 @@ class Autocomplete
     @attachChangeEventToOptions()
     @attachClickEventToOptions()
 
+    @attachFocusOut()
+
   attachClickEventToInput: ->
     @$input.click =>
       if !@$fieldset.attr('hidden')
@@ -95,6 +97,12 @@ class Autocomplete
   attachClickEventToOptions: ->
     @$radios.click (e) =>
       @hideOptions()
+
+  attachFocusOut: ->
+    @$el.focusout =>
+      if !@$fieldset.attr('hidden') && !@$el.is(':hover')
+        @applyCheckedOptionToInputAndResetOptions()
+        @hideOptions()
 
   showOptions: ->
     @$fieldset.removeAttr('hidden')
