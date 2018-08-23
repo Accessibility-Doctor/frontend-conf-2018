@@ -26,9 +26,7 @@ class Autocomplete
     @$options = @$optionsContainer.find('input[type="radio"]')
 
   initAlerts: ->
-    @$alertsContainer = $("<div id='alerts'></div>")
-    @$optionsContainerLabel.after(@$alertsContainer)
-    @$filter.attr('aria-describedby', [@$filter.attr('aria-describedby'), 'alerts'].join(' ').trim())
+    @$alertsContainer = @$el.find('#alerts')
 
   attachEvents: ->
     @attachClickEventToFilter()
