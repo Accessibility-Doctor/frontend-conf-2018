@@ -1,21 +1,21 @@
 p: button Focusable element before
 
-form
+form action="." method="GET"
   div data-autocomplete=true
     .control
       label for="filter" Programming languages
-      input#filter type="text" autocomplete="off" aria-expanded="false" aria-describedby="description alerts"
+      input#filter type="text" name="filter" autocomplete="off" aria-expanded="false" aria-describedby="description alerts"
 
       fieldset hidden=true
         legend.visually-hidden Programming language suggestions
 
         #alerts
 
-        - [:ActionScript, :AppleScript, :Asp, :BASIC, :C, :Clojure, :COBOL, :ColdFusion, :Erlang, :Fortran, :Groovy, :Haskell, :Java, :JavaScript, :Lisp, :Perl, :PHP, :Python, :Ruby, :Scala, :Scheme].each do |language|
+        - [:ActionScript, :AppleScript, :Asp, :BASIC, :C, :Clojure, :COBOL, :ColdFusion, :Erlang, :Fortran, :Groovy, :Haskell, :Java, :JavaScript, :Lisp, :Perl, :PHP, :Python, :Ruby, :Scala, :Scheme].each_with_index do |language, i|
           - id = language.downcase
 
           .control
-            input.visually-hidden id=id type="radio" name="language"
+            input.visually-hidden id=id type="radio" name="language_id" value=i
             label for=id = language
 
       #description

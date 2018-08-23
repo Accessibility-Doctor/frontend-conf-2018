@@ -32,6 +32,11 @@ class Autocomplete
       else
         @showOptions()
 
+  attachChangeEventToInput: ->
+    @$input.on 'input propertychange paste', (e) =>
+      @applyFilterToOptions(e.target.value)
+      @showOptions()
+
   attachEscapeKeyToInput: ->
     @$input.keydown (e) =>
       if e.which == 27
@@ -45,15 +50,6 @@ class Autocomplete
         else # Needed for automatic testing only
           $('body').append('<p>Esc passed on.</p>')
 
-  attachEnterKeyToInput: ->
-    @$input.keydown (e) =>
-      if e.which == 13
-        if !@$fieldset.attr('hidden')
-          @applyCheckedOptionToInputAndResetOptions()
-          e.preventDefault()
-        else # Needed for automatic testing only
-          $('body').append('<p>Enter passed on.</p>')
-
   attachSpaceKeyToInput: ->
     @$input.keydown (e) =>
       if e.which == 32
@@ -62,6 +58,15 @@ class Autocomplete
           e.preventDefault()
         else # Needed for automatic testing only
           $('body').append('<p>Space passed on.</p>')
+
+  attachEnterKeyToInput: ->
+    @$input.keydown (e) =>
+      if e.which == 13
+        if !@$fieldset.attr('hidden')
+          @applyCheckedOptionToInputAndResetOptions()
+          e.preventDefault()
+        else # Needed for automatic testing only
+          $('body').append('<p>Enter passed on.</p>')
 
   attachTabKeyToInput: ->
     @$input.keydown (e) =>
@@ -74,13 +79,22 @@ class Autocomplete
       if e.which == 38 || e.which == 40
         if !@$fieldset.attr('hidden')
           if e.which == 38
-            @moveSelection('up')
+            @walkThroughOptions('up')
           else
-            @moveSelection('down')
+            @walkThroughOptions('down')
         else
           @showOptions()
 
         e.preventDefault()
+
+  attachChangeEventToOptions: ->
+    @$radios.change (e) =>
+      @applyCheckedOptionToInput()
+      @$input.focus().select()
+
+  attachClickEventToOptions: ->
+    @$radios.click (e) =>
+      @hideOptions()
 
   showOptions: ->
     @$fieldset.removeAttr('hidden')
@@ -90,7 +104,7 @@ class Autocomplete
     @$fieldset.attr('hidden', '')
     @$input.attr('aria-expanded', 'false')
 
-  moveSelection: (direction) ->
+  walkThroughOptions: (direction) ->
     $visibleOptions = @$radios.filter(':visible')
 
     maxIndex = $visibleOptions.length - 1
@@ -110,16 +124,6 @@ class Autocomplete
     $upcomingOption = $($visibleOptions[upcomingIndex])
     $upcomingOption.prop('checked', true).trigger('change')
 
-  attachChangeEventToOptions: ->
-    @$radios.change (e) =>
-      @applyCheckedOptionToInput()
-      @$input.focus().select()
-
-  applyCheckedOptionToInputAndResetOptions: ->
-    @applyCheckedOptionToInput()
-    @hideOptions()
-    @applyFilterToOptions()
-
   applyCheckedOptionToInput: ->
     $previouslyCheckedOptionLabel = $(@$el.find('.selected'))
     if $previouslyCheckedOptionLabel.length == 1
@@ -132,15 +136,6 @@ class Autocomplete
       $checkedOptionLabel.addClass('selected')
     else
       @$input.val('')
-
-  attachClickEventToOptions: ->
-    @$radios.click (e) =>
-      @hideOptions()
-
-  attachChangeEventToInput: ->
-    @$input.on 'input propertychange paste', (e) =>
-      @applyFilterToOptions(e.target.value)
-      @showOptions()
 
   applyFilterToOptions: (filter = '') ->
     fuzzyFilter = @fuzzifyFilter(filter)
@@ -158,6 +153,11 @@ class Autocomplete
         $optionContainer.attr('hidden', '')
 
     @announceOptionsCount(filter, visibleCount)
+
+  applyCheckedOptionToInputAndResetOptions: ->
+    @applyCheckedOptionToInput()
+    @hideOptions()
+    @applyFilterToOptions()
 
   announceOptionsCount: (filter = @$input.val(), count = @$radios.length) ->
     @$alerts.find('p').remove() # Remove previous alerts
