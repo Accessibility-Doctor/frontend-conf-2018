@@ -22,12 +22,8 @@ class Autocomplete
 
   initOptions: ->
     @$optionsContainer = @$el.find('fieldset')
-
     @$optionsContainerLabel = @$el.find('legend')
-    @$optionsContainerLabel.addClass('visually-hidden')
-
     @$options = @$optionsContainer.find('input[type="radio"]')
-    @$options.addClass('visually-hidden')
 
   initAlerts: ->
     @$alertsContainer = $("<div id='alerts'></div>")
