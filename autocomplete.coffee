@@ -145,15 +145,15 @@ class Autocomplete
     else
       @$input.val('')
 
-  applyFilterToOptions: (filter = '') ->
-    fuzzyFilter = @fuzzifyFilter(filter)
+  applyFilterToOptions: (filter) ->
+    fuzzifiedFilter = @fuzzifyFilter(filter)
     visibleCount = 0
 
     @$radios.each (i, el) =>
       $option = $(el)
       $optionContainer = $option.parent()
 
-      regex = new RegExp(fuzzyFilter, 'i')
+      regex = new RegExp(fuzzifiedFilter, 'i')
       if regex.test($optionContainer.text())
         visibleCount++
         $optionContainer.removeAttr('hidden')
@@ -165,7 +165,7 @@ class Autocomplete
   applyCheckedOptionToInputAndResetOptions: ->
     @applyCheckedOptionToInput()
     @hideOptions()
-    @applyFilterToOptions()
+    @applyFilterToOptions('')
 
   announceOptionsCount: (filter = @$input.val(), count = @$radios.length) ->
     @$alerts.find('p').remove() # Remove previous alerts
@@ -177,11 +177,13 @@ class Autocomplete
 
     @$alerts.append("<p role='alert'>#{message}</p>")
 
+  # See https://stackoverflow.com/questions/3446170/escape-string-for-use-in-javascript-regex
   fuzzifyFilter: (filter) ->
     i = 0
     fuzzifiedFilter = ''
+
     while i < filter.length
-      escapedCharacter = filter.charAt(i).replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&") # See https://stackoverflow.com/questions/3446170/escape-string-for-use-in-javascript-regex
+      escapedCharacter = filter.charAt(i).replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&")
       fuzzifiedFilter += "#{escapedCharacter}.*?"
       i++
 
