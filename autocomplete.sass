@@ -12,6 +12,8 @@ fieldset
   background-color: lightyellow
   border: 1px solid
   padding: 5px 0
+  margin: -1px 0 0 200px
+  width: 164px
 
   label
     display: block
@@ -21,6 +23,12 @@ fieldset
       cursor: pointer
       background-color: #000
       color: lightyellow
+
+legend
+  @extend .visually-hidden
+
+input[type="radio"]
+  @extend .visually-hidden
 
 #alerts
   margin: 0 0 6px 0
@@ -35,9 +43,6 @@ fieldset
   p
     margin: 0
 
-.control
-  margin: 6px 0
-
 input[type="text"]
   width: 160px
 
@@ -51,13 +56,3 @@ label
 
   p
     margin-top: 0
-
-fieldset
-  margin: -1px 0 0 200px
-  width: 164px
-
-  .control
-    margin: 0
-
-  label
-    width: 100%

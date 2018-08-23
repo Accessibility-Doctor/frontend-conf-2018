@@ -188,5 +188,5 @@ class Autocomplete
     fuzzifiedFilter
 
 $(document).ready ->
-  $('[data-autocomplete]').each ->
+  $('form').each ->
     new Autocomplete @

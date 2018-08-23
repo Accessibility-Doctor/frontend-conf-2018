@@ -1,30 +1,28 @@
 p: button Focusable element before
 
 form action="." method="GET"
-  div data-autocomplete=true
-    .control
-      label for="filter" Programming languages
-      input#filter type="text" name="filter" autocomplete="off" aria-expanded="false" aria-describedby="description alerts"
+  label for="filter" Programming languages
+  input#filter type="text" name="filter" autocomplete="off" aria-expanded="false" aria-describedby="description alerts"
 
-      fieldset hidden=true
-        legend.visually-hidden Programming language suggestions
+  fieldset hidden=true
+    legend Programming language suggestions
 
-        #alerts
+    #alerts
 
-        - [:ActionScript, :AppleScript, :Asp, :BASIC, :C, :Clojure, :COBOL, :ColdFusion, :Erlang, :Fortran, :Groovy, :Haskell, :Java, :JavaScript, :Lisp, :Perl, :PHP, :Python, :Ruby, :Scala, :Scheme].each_with_index do |language, i|
-          - id = language.downcase
+    - [:ActionScript, :AppleScript, :Asp, :BASIC, :C, :Clojure, :COBOL, :ColdFusion, :Erlang, :Fortran, :Groovy, :Haskell, :Java, :JavaScript, :Lisp, :Perl, :PHP, :Python, :Ruby, :Scala, :Scheme].each_with_index do |language, i|
+      - id = language.downcase
 
-          .control
-            input.visually-hidden id=id type="radio" name="language_id" value=i
-            label for=id = language
+      .control
+        input id=id type="radio" name="language" value=i
+        label for=id = language
 
-      #description
-        p Provides auto-suggestions.
-        ul.visually-hidden
-          li Show suggestions: up, down, or space key (or enter text).
-          li Filter suggestions: enter text.
-          li Toggling through suggestions: up or down key.
-          li Selecting suggestion: enter key (while toggling) or click (options are below input).
-          li Reset selection: esc key.
+  #description
+    p Provides auto-suggestions.
+    ul.visually-hidden
+      li Show: up/down/space key, or enter text.
+      li Filter: enter text.
+      li Toggle: up/down key.
+      li Select: enter key (while toggling) or click (options are below input).
+      li Reset: esc key.
 
 p: button Focusable element after
