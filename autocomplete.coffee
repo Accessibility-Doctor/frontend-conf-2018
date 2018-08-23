@@ -2,11 +2,12 @@ class Autocomplete
   constructor: (el) ->
     @$el = $(el)
 
-    @initFilter()
-    @initOptions()
-    @initAlerts()
+    @$input    = @$el.find('input[type="text"]')
+    @$fieldset = @$el.find('fieldset')
+    @$radios   = @$fieldset.find('input[type="radio"]')
+    @$alerts   = @$el.find('#alerts')
 
-    @applyCheckedOptionToFilter()
+    @applyCheckedOptionToInput()
     @announceOptionsCount('')
 
     @attachEvents()
@@ -17,68 +18,57 @@ class Autocomplete
   hide: ($el) ->
     $el.attr('hidden', '')
 
-  initFilter: ->
-    @$filter = @$el.find('input[type="text"]')
-
-  initOptions: ->
-    @$optionsContainer = @$el.find('fieldset')
-    @$optionsContainerLabel = @$el.find('legend')
-    @$options = @$optionsContainer.find('input[type="radio"]')
-
-  initAlerts: ->
-    @$alertsContainer = @$el.find('#alerts')
-
   attachEvents: ->
-    @attachClickEventToFilter()
-    @attachChangeEventToFilter()
+    @attachClickEventToInput()
+    @attachChangeEventToInput()
 
-    @attachEscapeKeyToFilter()
-    @attachEnterKeyToFilter()
-    @attachTabKeyToFilter()
-    @attachUpDownKeysToFilter()
+    @attachEscapeKeyToInput()
+    @attachEnterKeyToInput()
+    @attachTabKeyToInput()
+    @attachUpDownKeysToInput()
 
     @attachChangeEventToOptions()
     @attachClickEventToOptions()
 
-  attachClickEventToFilter: ->
-    @$filter.click =>
-      if !@$optionsContainer.attr('hidden')
+  attachClickEventToInput: ->
+    @$input.click =>
+      if !@$fieldset.attr('hidden')
         @hideOptions()
       else
         @showOptions()
 
-  attachEscapeKeyToFilter: ->
-    @$filter.keydown (e) =>
+  attachEscapeKeyToInput: ->
+    @$input.keydown (e) =>
       if e.which == 27
-        if !@$optionsContainer.attr('hidden')
-          @applyCheckedOptionToFilterAndResetOptions()
+        if !@$fieldset.attr('hidden')
+          @applyCheckedOptionToInputAndResetOptions()
           e.preventDefault()
-        else if @$options.is(':checked')
-          @$options.prop('checked', false)
-          @applyCheckedOptionToFilterAndResetOptions()
+        else if @$radios.is(':checked')
+          @$radios.prop('checked', false)
+          @applyCheckedOptionToInputAndResetOptions()
           e.preventDefault()
         else # Needed for automatic testing only
           $('body').append('<p>Esc passed on.</p>')
 
-  attachEnterKeyToFilter: ->
-    @$filter.keydown (e) =>
+  attachEnterKeyToInput: ->
+    @$input.keydown (e) =>
       if e.which == 13
-        if !@$optionsContainer.attr('hidden')
-          @applyCheckedOptionToFilterAndResetOptions()
+        if !@$fieldset.attr('hidden')
+          @applyCheckedOptionToInputAndResetOptions()
           e.preventDefault()
         else # Needed for automatic testing only
           $('body').append('<p>Enter passed on.</p>')
 
-  attachTabKeyToFilter: ->
-    @$filter.keydown (e) =>
+  attachTabKeyToInput: ->
+    @$input.keydown (e) =>
       if e.which == 9
-        if !@$optionsContainer.attr('hidden')
-          @applyCheckedOptionToFilterAndResetOptions()
+        if !@$fieldset.attr('hidden')
+          @applyCheckedOptionToInputAndResetOptions()
 
-  attachUpDownKeysToFilter: ->
-    @$filter.keydown (e) =>
+  attachUpDownKeysToInput: ->
+    @$input.keydown (e) =>
       if e.which == 38 || e.which == 40
-        if !@$optionsContainer.attr('hidden')
+        if !@$fieldset.attr('hidden')
           if e.which == 38
             @moveSelection('up')
           else
@@ -89,15 +79,15 @@ class Autocomplete
         e.preventDefault()
 
   showOptions: ->
-    @show(@$optionsContainer)
-    @$filter.attr('aria-expanded', 'true')
+    @show(@$fieldset)
+    @$input.attr('aria-expanded', 'true')
 
   hideOptions: ->
-    @hide(@$optionsContainer)
-    @$filter.attr('aria-expanded', 'false')
+    @hide(@$fieldset)
+    @$input.attr('aria-expanded', 'false')
 
   moveSelection: (direction) ->
-    $visibleOptions = @$options.filter(':visible')
+    $visibleOptions = @$radios.filter(':visible')
 
     maxIndex = $visibleOptions.length - 1
     currentIndex = $visibleOptions.index($visibleOptions.parent().find(':checked'))
@@ -117,42 +107,42 @@ class Autocomplete
     $upcomingOption.prop('checked', true).trigger('change')
 
   attachChangeEventToOptions: ->
-    @$options.change (e) =>
-      @applyCheckedOptionToFilter()
-      @$filter.focus().select()
+    @$radios.change (e) =>
+      @applyCheckedOptionToInput()
+      @$input.focus().select()
 
-  applyCheckedOptionToFilterAndResetOptions: ->
-    @applyCheckedOptionToFilter()
+  applyCheckedOptionToInputAndResetOptions: ->
+    @applyCheckedOptionToInput()
     @hideOptions()
-    @filterOptions()
+    @applyFilterToOptions()
 
-  applyCheckedOptionToFilter: ->
+  applyCheckedOptionToInput: ->
     $previouslyCheckedOptionLabel = $(@$el.find('.selected'))
     if $previouslyCheckedOptionLabel.length == 1
       $previouslyCheckedOptionLabel.removeClass('selected')
 
-    $checkedOption = @$options.filter(':checked')
+    $checkedOption = @$radios.filter(':checked')
     if $checkedOption.length == 1
       $checkedOptionLabel = $(@$el.find("label[for='#{$checkedOption.attr('id')}']")[0])
-      @$filter.val($.trim($checkedOptionLabel.text()))
+      @$input.val($.trim($checkedOptionLabel.text()))
       $checkedOptionLabel.addClass('selected')
     else
-      @$filter.val('')
+      @$input.val('')
 
   attachClickEventToOptions: ->
-    @$options.click (e) =>
+    @$radios.click (e) =>
       @hideOptions()
 
-  attachChangeEventToFilter: ->
-    @$filter.on 'input propertychange paste', (e) =>
-      @filterOptions(e.target.value)
+  attachChangeEventToInput: ->
+    @$input.on 'input propertychange paste', (e) =>
+      @applyFilterToOptions(e.target.value)
       @showOptions()
 
-  filterOptions: (filter = '') ->
+  applyFilterToOptions: (filter = '') ->
     fuzzyFilter = @fuzzifyFilter(filter)
     visibleCount = 0
 
-    @$options.each (i, el) =>
+    @$radios.each (i, el) =>
       $option = $(el)
       $optionContainer = $option.parent()
 
@@ -165,15 +155,15 @@ class Autocomplete
 
     @announceOptionsCount(filter, visibleCount)
 
-  announceOptionsCount: (filter = @$filter.val(), count = @$options.length) ->
-    @$alertsContainer.find('p').remove() # Remove previous alerts
+  announceOptionsCount: (filter = @$input.val(), count = @$radios.length) ->
+    @$alerts.find('p').remove() # Remove previous alerts
 
     message = if filter == ''
                 "#{count} options in total"
               else
-                "#{count} of #{@$options.length} options for <kbd>#{filter}</kbd>"
+                "#{count} of #{@$radios.length} options for <kbd>#{filter}</kbd>"
 
-    @$alertsContainer.append("<p role='alert'>#{message}</p>")
+    @$alerts.append("<p role='alert'>#{message}</p>")
 
   fuzzifyFilter: (filter) ->
     i = 0
