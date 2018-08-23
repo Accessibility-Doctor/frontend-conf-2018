@@ -12,9 +12,9 @@ form action="." method="GET"
     - [:ActionScript, :AppleScript, :Asp, :BASIC, :C, :Clojure, :COBOL, :ColdFusion, :Erlang, :Fortran, :Groovy, :Haskell, :Java, :JavaScript, :Lisp, :Perl, :PHP, :Python, :Ruby, :Scala, :Scheme].each_with_index do |language, i|
       - id = language.downcase
 
-      .control
+      label for=id
+        = language
         input id=id type="radio" name="language" value=i
-        label for=id = language
 
   #description
     p Provides auto-suggestions.

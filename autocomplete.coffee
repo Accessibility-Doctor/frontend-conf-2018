@@ -139,7 +139,7 @@ class Autocomplete
 
     $checkedOption = @$radios.filter(':checked')
     if $checkedOption.length == 1
-      $checkedOptionLabel = $(@$el.find("label[for='#{$checkedOption.attr('id')}']")[0])
+      $checkedOptionLabel = $($checkedOption.parent()[0])
       @$input.val($.trim($checkedOptionLabel.text()))
       $checkedOptionLabel.addClass('selected')
     else

@@ -15,7 +15,7 @@ fieldset
   margin: -1px 0 0 200px
   width: 164px
 
-  label
+  label:not([hidden])
     display: block
     width: 100%
 
@@ -47,10 +47,11 @@ input[type="radio"]
 input[type="text"]
   width: 160px
 
-label
-  display: inline-block
-  width: 200px
-  vertical-align: top
+form
+  > label
+    display: inline-block
+    width: 200px
+    vertical-align: top
 
 #description
   margin-left: 200px
