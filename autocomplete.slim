@@ -3,19 +3,20 @@ p: button Focusable element before
 form
   div data-autocomplete=true
     .control
-      label for="filter" Favorite hobby
+      label for="filter" Programming languages
       input#filter type="text" autocomplete="off" aria-expanded="false" aria-describedby="description alerts"
 
       fieldset hidden=true
-        legend.visually-hidden Favorite hobby suggestions
+        legend.visually-hidden Programming language suggestions
 
-        #alerts
+        p#alerts
 
-        - [:hiking, :dancing, :gardening, :meditation, :gaming].each do |hobby|
+        - [:ActionScript, :AppleScript, :Asp, :BASIC, :C, :Clojure, :COBOL, :ColdFusion, :Erlang, :Fortran, :Groovy, :Haskell, :Java, :JavaScript, :Lisp, :Perl, :PHP, :Python, :Ruby, :Scala, :Scheme].each do |language|
+          - id = language.downcase
 
           .control
-            input.visually-hidden id=hobby type="radio" name="hobby"
-            label for=hobby = hobby.capitalize
+            input.visually-hidden id=id type="radio" name="language"
+            label for=id = language
 
       p#description.description Provides auto-suggestions when entering text
 
