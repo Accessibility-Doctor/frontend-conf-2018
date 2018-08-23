@@ -18,6 +18,9 @@ form
             input.visually-hidden id=id type="radio" name="language"
             label for=id = language
 
-      p#description.description Provides auto-suggestions when entering text
+      p#description.description
+        | Provides auto-suggestions when entering text.
+        span.visually-hidden Keyboard users: use up or down key to toggle through suggestions, then use enter to select current suggestion.
+        span.visually-hidden Touch screen users: navigate below text field to reach suggested options.
 
 p: button Focusable element after
