@@ -10,32 +10,25 @@
   clip-path: inset(50%)
   margin: -1px
 
-[data-autocomplete-options]
+fieldset
   position: absolute
   z-index: 1
   background-color: lightyellow
   border: 1px solid
   padding: 5px 0
 
-[data-autocomplete-option]
-  display: block
+  label
+    display: block
 
-[data-autocomplete-option]:hover,
-[data-autocomplete-option-selected]
-  cursor: pointer
-  background-color: #000
-  color: lightyellow
+    &:hover,
+    &.selected
+      cursor: pointer
+      background-color: #000
+      color: lightyellow
 
-[data-autocomplete-alerts]
+#alerts
   p
     margin: 0
-
-  kbd
-    &::before
-      content: '«'
-
-    &::after
-      content: '»'
 
 .control
   margin: 6px 0
