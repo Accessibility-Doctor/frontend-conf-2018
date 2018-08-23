@@ -12,12 +12,6 @@ class Autocomplete
 
     @attachEvents()
 
-  show: ($el) ->
-    $el.removeAttr('hidden')
-
-  hide: ($el) ->
-    $el.attr('hidden', '')
-
   attachEvents: ->
     @attachClickEventToInput()
     @attachChangeEventToInput()
@@ -79,11 +73,11 @@ class Autocomplete
         e.preventDefault()
 
   showOptions: ->
-    @show(@$fieldset)
+    @$fieldset.removeAttr('hidden')
     @$input.attr('aria-expanded', 'true')
 
   hideOptions: ->
-    @hide(@$fieldset)
+    @$fieldset.attr('hidden', '')
     @$input.attr('aria-expanded', 'false')
 
   moveSelection: (direction) ->
@@ -149,9 +143,9 @@ class Autocomplete
       regex = new RegExp(fuzzyFilter, 'i')
       if regex.test($optionContainer.text())
         visibleCount++
-        @show($optionContainer)
+        $optionContainer.removeAttr('hidden')
       else
-        @hide($optionContainer)
+        $optionContainer.attr('hidden', '')
 
     @announceOptionsCount(filter, visibleCount)
 
