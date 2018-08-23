@@ -17,6 +17,7 @@ class Autocomplete
     @attachChangeEventToInput()
 
     @attachEscapeKeyToInput()
+    @attachSpaceKeyToInput()
     @attachEnterKeyToInput()
     @attachTabKeyToInput()
     @attachUpDownKeysToInput()
@@ -52,6 +53,15 @@ class Autocomplete
           e.preventDefault()
         else # Needed for automatic testing only
           $('body').append('<p>Enter passed on.</p>')
+
+  attachSpaceKeyToInput: ->
+    @$input.keydown (e) =>
+      if e.which == 32
+        if @$fieldset.attr('hidden') && @$input.val() == ''
+          @showOptions()
+          e.preventDefault()
+        else # Needed for automatic testing only
+          $('body').append('<p>Space passed on.</p>')
 
   attachTabKeyToInput: ->
     @$input.keydown (e) =>
