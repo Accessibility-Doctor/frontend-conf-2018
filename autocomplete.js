@@ -141,6 +141,7 @@ AdgAutocomplete = (function() {
       this.$options = this.$optionsContainer.find('input[type="radio"]');
       this.addAdgDataAttribute(this.labelOfInput(this.$options), 'option');
       this.$options.addClass(this.config.hiddenCssClass);
+      this.hideOptions();
     }
 
     initAlerts() {

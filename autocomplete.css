@@ -44,26 +44,35 @@
   margin: 6px 0;
 }
 
-input[type="text"] {
+label,
+input[type="text"],
+.description {
+  display: none;
+}
+
+.js input[type="text"] {
+  display: inline-block;
   width: 140px;
 }
 
-label {
+.js label {
   display: inline-block;
   width: 120px;
   vertical-align: top;
 }
 
-.description {
+.js .description {
   margin-left: 120px;
 }
 
-fieldset {
+.js fieldset {
   margin: -1px 0 0 120px;
 }
+
 fieldset .control {
   margin: 0;
 }
 fieldset label {
+  display: inline-block;
   min-width: 144px;
 }
