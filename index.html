@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Accessible Autocomplete</title>
+  <script>document.documentElement.className += ' js';</script>
+  <link rel="stylesheet" href="autocomplete.css">
+</head>
+<body>
+  <p>
+    <button>Focusable element before</button>
+  </p>
+
+  <form>
+    <div class="control" data-adg-autosuggest>
+      <label for="favorite_hobby_filter">Favorite hobby</label>
+      <input aria-describedby="favorite_hobby_filter_help" id="favorite_hobby_filter" type="text" />
+      <fieldset>
+        <legend>Favorite hobby suggestions</legend>
+        <div class="control">
+          <input value="Hiking" id="favorite_hobby_hiking" name="hobby" type="radio" />
+          <label for="favorite_hobby_hiking">Hiking</label>
+        </div>
+        <div class="control">
+          <input value="Dancing" id="favorite_hobby_dancing" name="hobby" type="radio" />
+          <label for="favorite_hobby_dancing">Dancing</label>
+        </div>
+        <div class="control">
+          <input value="Gardening" id="favorite_hobby_gardening" name="hobby" type="radio" />
+          <label for="favorite_hobby_gardening">Gardening</label>
+        </div>
+        <div class="control">
+          <input value="Meditation" id="favorite_hobby_meditation" name="hobby" type="radio" />
+          <label for="favorite_hobby_meditation">Meditation</label>
+        </div>
+        <div class="control">
+          <input value="Gaming" id="favorite_hobby_gaming" name="hobby" type="radio" />
+          <label for="favorite_hobby_gaming">Gaming</label>
+        </div>
+      </fieldset>
+      <div class="description" id="favorite_hobby_filter_help">
+        Provides auto-suggestions when entering text
+      </div>
+    </div>
+  </form>
+
+  <p>
+    <button>Focusable element after</button>
+  </p>
+
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script src="autocomplete.js"></script>
+</body>
+</html>
