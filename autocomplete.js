@@ -30,20 +30,12 @@ AdgAutocomplete = (function() {
           this.config[key] = val;
         }
       }
-      this.debugMessage('start');
       this.initFilter();
       this.initOptions();
       this.initAlerts();
       this.applyCheckedOptionToFilter();
       this.announceOptionsNumber('');
       this.attachEvents();
-    }
-
-    // Prints the given message to the console if config['debug'] is true.
-    debugMessage(message) {
-      if (this.config.debugMessage) {
-        return console.log(`Adg debug: ${message}`);
-      }
     }
 
     // Executes the given selector on @$el and returns the element. Makes sure exactly one element exists.
@@ -69,11 +61,11 @@ AdgAutocomplete = (function() {
     }
 
     addAdgDataAttribute($target, name, value = '') {
-      return $target.attr(this.adgDataAttributeName(name), value);
+      $target.attr(this.adgDataAttributeName(name), value);
     }
 
     removeAdgDataAttribute($target, name) {
-      return $target.removeAttr(this.adgDataAttributeName(name));
+      $target.removeAttr(this.adgDataAttributeName(name));
     }
 
     adgDataAttributeName(name = null) {
@@ -109,14 +101,14 @@ AdgAutocomplete = (function() {
 
     show($el) {
       $el.removeAttr('hidden');
-      return $el.show();
+      $el.show();
     }
 
     // TODO Would be cool to renounce CSS and solely use the hidden attribute. But jQuery's :visible doesn't seem to work with it!?
     // @throwMessageAndPrintObjectsToConsole("Element is still hidden, although hidden attribute was removed! Make sure there's no CSS like display:none or visibility:hidden left on it!", element: $el) if $el.is(':hidden')
     hide($el) {
       $el.attr('hidden', '');
-      return $el.hide();
+      $el.hide();
     }
 
     throwMessageAndPrintObjectsToConsole(message, elements = {}) {
@@ -138,7 +130,7 @@ AdgAutocomplete = (function() {
       this.$filter = this.findOne('input[type="text"]');
       this.addAdgDataAttribute(this.$filter, 'filter');
       this.$filter.attr('autocomplete', 'off');
-      return this.$filter.attr('aria-expanded', 'false');
+      this.$filter.attr('aria-expanded', 'false');
     }
 
     initOptions() {
@@ -148,14 +140,14 @@ AdgAutocomplete = (function() {
       this.$optionsContainerLabel.addClass(this.config.hiddenCssClass);
       this.$options = this.$optionsContainer.find('input[type="radio"]');
       this.addAdgDataAttribute(this.labelOfInput(this.$options), 'option');
-      return this.$options.addClass(this.config.hiddenCssClass);
+      this.$options.addClass(this.config.hiddenCssClass);
     }
 
     initAlerts() {
       this.$alertsContainer = $(`<div id='${this.uniqueId(this.config.alertsContainerId)}'></div>`);
       this.$optionsContainerLabel.after(this.$alertsContainer);
       this.$filter.attr('aria-describedby', [this.$filter.attr('aria-describedby'), this.$alertsContainer.attr('id')].join(' ').trim());
-      return this.addAdgDataAttribute(this.$alertsContainer, 'alerts');
+      this.addAdgDataAttribute(this.$alertsContainer, 'alerts');
     }
 
     attachEvents() {
@@ -166,64 +158,57 @@ AdgAutocomplete = (function() {
       this.attachTabKeyToFilter();
       this.attachUpDownKeysToFilter();
       this.attachChangeEventToOptions();
-      return this.attachClickEventToOptions();
+      this.attachClickEventToOptions();
     }
 
     attachClickEventToFilter() {
-      return this.$filter.click(() => {
-        this.debugMessage('click filter');
+      this.$filter.click(() => {
         if (this.$optionsContainer.is(':visible')) {
-          return this.hideOptions();
+          this.hideOptions();
         } else {
-          return this.showOptions();
+          this.showOptions();
         }
       });
     }
 
     attachEscapeKeyToFilter() {
-      return this.$filter.keydown((e) => {
+      this.$filter.keydown((e) => {
         if (e.which === 27) {
           if (this.$optionsContainer.is(':visible')) {
             this.applyCheckedOptionToFilterAndResetOptions();
-            return e.preventDefault();
+            e.preventDefault();
           } else if (this.$options.is(':checked')) {
             this.$options.prop('checked', false);
             this.applyCheckedOptionToFilterAndResetOptions();
-            return e.preventDefault(); // Needed for automatic testing only
-          } else {
-            return $('body').append('<p>Esc passed on.</p>');
+            e.preventDefault();
           }
         }
       });
     }
 
     attachEnterKeyToFilter() {
-      return this.$filter.keydown((e) => {
+      this.$filter.keydown((e) => {
         if (e.which === 13) {
-          this.debugMessage('enter');
           if (this.$optionsContainer.is(':visible')) {
             this.applyCheckedOptionToFilterAndResetOptions();
-            return e.preventDefault(); // Needed for automatic testing only
-          } else {
-            return $('body').append('<p>Enter passed on.</p>');
+            e.preventDefault();
           }
         }
       });
     }
 
     attachTabKeyToFilter() {
-      return this.$filter.keydown((e) => {
+      this.$filter.keydown((e) => {
         if (e.which === 9) {
-          this.debugMessage('tab');
           if (this.$optionsContainer.is(':visible')) {
-            return this.applyCheckedOptionToFilterAndResetOptions();
+            this.applyCheckedOptionToFilterAndResetOptions();
           }
         }
       });
     }
 
     attachUpDownKeysToFilter() {
-      return this.$filter.keydown((e) => {
+      this.$filter.keydown((e) => {
         if (e.which === 38 || e.which === 40) {
           if (this.$optionsContainer.is(':visible')) {
             if (e.which === 38) {
@@ -234,21 +219,19 @@ AdgAutocomplete = (function() {
           } else {
             this.showOptions();
           }
-          return e.preventDefault(); // TODO: Test!
+          e.preventDefault(); // TODO: Test!
         }
       });
     }
 
     showOptions() {
-      this.debugMessage('(show options)');
       this.show(this.$optionsContainer);
-      return this.$filter.attr('aria-expanded', 'true');
+      this.$filter.attr('aria-expanded', 'true');
     }
 
     hideOptions() {
-      this.debugMessage('(hide options)');
       this.hide(this.$optionsContainer);
-      return this.$filter.attr('aria-expanded', 'false');
+      this.$filter.attr('aria-expanded', 'false');
     }
 
     moveSelection(direction) {
@@ -258,26 +241,24 @@ AdgAutocomplete = (function() {
       currentIndex = $visibleOptions.index($visibleOptions.parent().find(':checked')); // TODO: is parent() good here?!
       upcomingIndex = direction === 'up' ? currentIndex <= 0 ? maxIndex : currentIndex - 1 : currentIndex === maxIndex ? 0 : currentIndex + 1;
       $upcomingOption = $($visibleOptions[upcomingIndex]);
-      return $upcomingOption.prop('checked', true).trigger('change');
+      $upcomingOption.prop('checked', true).trigger('change');
     }
 
     attachChangeEventToOptions() {
-      return this.$options.change((e) => {
-        this.debugMessage('option change');
+      this.$options.change((e) => {
         this.applyCheckedOptionToFilter();
-        return this.$filter.focus().select();
+        this.$filter.focus().select();
       });
     }
 
     applyCheckedOptionToFilterAndResetOptions() {
       this.applyCheckedOptionToFilter();
       this.hideOptions();
-      return this.filterOptions();
+      this.filterOptions();
     }
 
     applyCheckedOptionToFilter() {
       var $checkedOption, $checkedOptionLabel, $previouslyCheckedOptionLabel;
-      this.debugMessage('(apply option to filter)');
       $previouslyCheckedOptionLabel = $(`[${this.adgDataAttributeName('option-selected')}]`);
       if ($previouslyCheckedOptionLabel.length === 1) {
         this.removeAdgDataAttribute($previouslyCheckedOptionLabel, 'option-selected');
@@ -286,24 +267,22 @@ AdgAutocomplete = (function() {
       if ($checkedOption.length === 1) {
         $checkedOptionLabel = this.labelOfInput($checkedOption);
         this.$filter.val($.trim($checkedOptionLabel.text()));
-        return this.addAdgDataAttribute($checkedOptionLabel, 'option-selected');
+        this.addAdgDataAttribute($checkedOptionLabel, 'option-selected');
       } else {
-        return this.$filter.val('');
+        this.$filter.val('');
       }
     }
 
     attachClickEventToOptions() {
-      return this.$options.click((e) => {
-        this.debugMessage('click option');
-        return this.hideOptions();
+      this.$options.click((e) => {
+        this.hideOptions();
       });
     }
 
     attachChangeEventToFilter() {
-      return this.$filter.on('input propertychange paste', (e) => {
-        this.debugMessage('(filter changed)');
+      this.$filter.on('input propertychange paste', (e) => {
         this.filterOptions(e.target.value);
-        return this.showOptions();
+        this.showOptions();
       });
     }
 
@@ -318,12 +297,12 @@ AdgAutocomplete = (function() {
         regex = new RegExp(fuzzyFilter, 'i');
         if (regex.test($optionContainer.text())) {
           visibleNumber++;
-          return this.show($optionContainer);
+          this.show($optionContainer);
         } else {
-          return this.hide($optionContainer);
+          this.hide($optionContainer);
         }
       });
-      return this.announceOptionsNumber(filter, visibleNumber);
+      this.announceOptionsNumber(filter, visibleNumber);
     }
 
     announceOptionsNumber(filter = this.$filter.val(), number = this.$options.length) {
@@ -336,7 +315,7 @@ AdgAutocomplete = (function() {
         total: this.$options.length,
         filter: `<kbd>${filter}</kbd>`
       });
-      return this.$alertsContainer.append(`<p role='alert'>${message}</p>`);
+      this.$alertsContainer.append(`<p role='alert'>${message}</p>`);
     }
 
     fuzzifyFilter(filter) {
@@ -356,7 +335,6 @@ AdgAutocomplete = (function() {
   uniqueIdCount = 1;
 
   config = {
-    debugMessage: false,
     hiddenCssClass: 'adg-visually-hidden',
     optionsContainer: 'fieldset',
     optionsContainerLabel: 'legend',
@@ -367,10 +345,10 @@ AdgAutocomplete = (function() {
 
   return AdgAutocomplete;
 
-}).call(this);
+})();
 
 $(document).ready(function() {
-  return $('[data-adg-autosuggest]').each(function() {
-    return new AdgAutocomplete(this);
+  $('[data-adg-autosuggest]').each(function() {
+    new AdgAutocomplete(this);
   });
 });
